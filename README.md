@@ -1,19 +1,20 @@
 
 <div align="middle">
+
 <h1>I will introduce you to "my-chat"</h1>
 </div>
 
+<br>
+<br>
 
-<br>
-<br>
 <div align="middle">
-<img src="src/main/resources/java.png" height="100" width="120"/>
-<img src="src/main/resources/sockets.jpg" height="100" width="120"/>
+<img src="assets/java.png" height="100" width="120"/>
+<img src="assets/sockets.jpg" height="100" width="120"/>
 </div>
 <br>
 <br>
 
-`A chat application that works with Client - Server architecture`
+`A chat application that works with Client - Server architecture in a multimodule project`
 
 <br>
 
@@ -50,7 +51,7 @@ service, and returns the results in the form of a response.
 MyChat was created following "Pildoras Informaticas" 's YouTube Java course.
 <br>
 <div align="middle">
-<img src="src/main/resources/javacourse.png" height="100" width="120"/>
+<img src="assets/javacourse.png" height="100" width="120"/>
 </div>
 <br>
 
