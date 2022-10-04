@@ -8,7 +8,7 @@
 <br>
 
 <div align="middle">
-<img src="assets/java.png" height="100" width="120"/>
+<img src="assets/java.png" height="100" width="120">
 <img src="assets/sockets.jpg" height="100" width="120"/>
 </div>
 <br>
@@ -42,7 +42,7 @@ service, and returns the results in the form of a response.
 
 3) Run the command mvn clean package
 
-4) Run the command "java -jar ./target/Client-1.0-SNAPSHOT-jar-with-dependencies.jar" or 
+4) Run the command "java -jar ./client/target/client-1.0-SNAPSHOT.jar" or 
 "java -jar ./target/Server-1.0-SNAPSHOT"
 
 
