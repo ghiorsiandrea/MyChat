@@ -42,9 +42,9 @@ service, and returns the results in the form of a response.
 
 3) Run the command mvn clean package
 
-4) Run the command "java -jar ./client/target/client-1.0-SNAPSHOT.jar" or 
-"java -jar ./target/Server-1.0-SNAPSHOT"
+4) Run first the command "java -jar ./server/target/server-1.0-SNAPSHOT-jar-with-dependencies.jar"
 
+5) Next run "java -jar ./client/target/client-1.0-SNAPSHOT-jar-with-dependencies.jar"
 
 <br>
 
