@@ -12,8 +12,22 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
 
 public class Server {
+
+    public static HashMap<String, String> ALL_IPS = new HashMap<String, String>();
+
+    public HashMap<String, String> getAllIps() {
+        return ALL_IPS;
+    }
+
+    public void setAllIps(HashMap<String, String> allIps) {
+        this.ALL_IPS = allIps;
+    }
+
     public static void main(String[] args) {
         MarcoServidor miMarco = new MarcoServidor();
         miMarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,58 +61,58 @@ public class Server {
                 ServerSocket servidor = new ServerSocket();
                 servidor.bind(new InetSocketAddress("0.0.0.0", PORT));
 
-                //ServerSocket servidor = new ServerSocket(PORT);
-
-                String nick, ip, mensaje;
-                ArrayList<String> listaIp = new ArrayList<String>();
+                String nick, mensaje;
                 ShippingPackage paquete_recibido;
+
+
                 while (true) {
                     Socket misocket = servidor.accept();
 
                     ObjectInputStream paquete_datos = new ObjectInputStream(misocket.getInputStream());
                     paquete_recibido = (ShippingPackage) paquete_datos.readObject();
                     nick = paquete_recibido.getNick();
-                    ip = paquete_recibido.getIp();
                     mensaje = paquete_recibido.getMensaje();
+                    String localizacionIp = misocket.getInetAddress().getHostAddress();
 
                     if (!mensaje.equals(ONLINE)) {
-                        areatexto.append("\n" + "De: " + nick + ", para: " + ip + " " + "\n" + "" + mensaje + "");
+                        areatexto.append("\n" + "FROM: " + nick + ", TO: " + localizacionIp + " " + "\n" + "" + mensaje + "");
 
-                        // Puente de comunicacion por donde fluiran los datos para reenviarse
-                        Socket enviaDestinatario = new Socket(ip, 9090);
+                        // Communication bridge through which the data will flow to be forwarded
+
+                        Socket enviaDestinatario = new Socket(localizacionIp, 9090);
                         ObjectOutputStream paqueteReenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
                         paqueteReenvio.writeObject(paquete_recibido);
                         enviaDestinatario.close();
                         misocket.close();
+
                     } else {
-                        //     -------    Ex.Tree - Detecta Online    -------
-                        InetAddress localizacion = misocket.getInetAddress();
-                        String IpRemota = localizacion.getHostAddress();
-                        //System.out.println("\nOnline con la IP " + IpRemota);
 
-                        listaIp.add(IpRemota);
+                        //     -------  Detecta Online    -------
+                        ALL_IPS.put(nick, localizacionIp);
 
-                        paquete_recibido.setIps(listaIp);
+                        Set<String> allNicks = ALL_IPS.keySet();
+                        ArrayList<String> listOfNicks = new ArrayList<String>(allNicks);
+                        Collection<String> allIps = ALL_IPS.values();
 
-                        for(String z: listaIp) {
-                            System.out.println("Array: " + z);
+                        for (String ip : allIps) {
 
-                            // Puente de comunicacion por donde fluiran los datos para reenviarse
-                            Socket enviaDestinatario = new Socket(z, 9090);
-                            ObjectOutputStream paqueteReenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
-                            paqueteReenvio.writeObject(paquete_recibido);
-                            enviaDestinatario.close();
+                            // Communication bridge through which the data will flow to be forwarded
+
+                            Socket IpsSender = new Socket(ip, 9090);
+                            ShippingPackage nicksPackage = new ShippingPackage();
+                            nicksPackage.setNicks(listOfNicks);
+                            nicksPackage.setMensaje(ONLINE);
+                            ObjectOutputStream paqueteReenvio = new ObjectOutputStream(IpsSender.getOutputStream());
+                            paqueteReenvio.writeObject(nicksPackage);
+                            IpsSender.close();
                             misocket.close();
+                        }
+
+                        for (String z : allNicks) {
+                            System.out.println("NICKS: " + z);
                         }
                     }
 
-                    //     -------    Ex.Tree - Detecta Online    -------
-
-//                    Ex. One
-//                    DataInputStream flujo_entrada = new DataInputStream(misocket.getInputStream());
-//                    String mensaje_texto = flujo_entrada.readUTF();
-//                    areatexto.append("\n" + mensaje_texto);
-//                    misocket.close();
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
