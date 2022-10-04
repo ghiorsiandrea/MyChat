@@ -1,4 +1,6 @@
-package org.ghiorsi;
+package org.ghiorsi.client;
+
+import org.ghiorsi.commons.ShippingPackage;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package org.ghiorsi;
+package org.ghiorsi.commons;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,6 @@
-package org.ghiorsi;
+package org.ghiorsi.server;
+
+import org.ghiorsi.commons.ShippingPackage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +42,7 @@ public class Server {
 
         @Override
         public void run() {
-            System.out.println("FUNCIONA");
+            System.out.println("Welcome to My Chat");
             try {
                 ServerSocket servidor = new ServerSocket();
                 servidor.bind(new InetSocketAddress("0.0.0.0", PORT));
