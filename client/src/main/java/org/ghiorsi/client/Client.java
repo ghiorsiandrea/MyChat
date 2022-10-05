@@ -73,8 +73,6 @@ public class Client {
 
         public LaminaMarcoCliente(String userNick) {
 
-            Color.ColorFondo cyan = new Color.ColorFondo(java.awt.Color.CYAN, this);
-
             nick = new JLabel();
             nick.setText(userNick);
             nick.setBackground(java.awt.Color.CYAN);
@@ -159,25 +157,5 @@ public class Client {
             }
         }
     }
-
-    public static class Color extends JFrame {
-        static class ColorFondo implements ActionListener {
-
-            private java.awt.Color colordeFondo;
-            private JPanel lamina;
-
-            public ColorFondo(java.awt.Color c, JPanel l) {
-                colordeFondo = c;
-                lamina = l;
-            }
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                lamina.setBackground(colordeFondo);
-            }
-        }
-
-        }
 }
 
