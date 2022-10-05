@@ -3,6 +3,7 @@ package org.ghiorsi.client;
 import org.ghiorsi.commons.ShippingPackage;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -20,6 +21,7 @@ public class Client {
 
     public static void main(String[] args) {
         String userNick = JOptionPane.showInputDialog("Write your Nick: ");
+        //TODO
         MarcoCliente miMarco = new MarcoCliente(userNick);
         miMarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -30,6 +32,7 @@ public class Client {
             addWindowListener(new OnlineSender(userNick));
             LaminaMarcoCliente milamina = new LaminaMarcoCliente(userNick);
             add(milamina);
+            milamina.setBackground(java.awt.Color.GRAY);
             setVisible(true);
         }
     }
@@ -38,8 +41,6 @@ public class Client {
      * Online signal Sender
      */
     static class OnlineSender extends WindowAdapter {
-
-
         private String userNick;
 
         public OnlineSender(String userNick) {
@@ -71,22 +72,35 @@ public class Client {
         private JButton sendButton;
 
         public LaminaMarcoCliente(String userNick) {
+
+            Color.ColorFondo cyan = new Color.ColorFondo(java.awt.Color.CYAN, this);
+
             nick = new JLabel();
             nick.setText(userNick);
+            nick.setBackground(java.awt.Color.CYAN);
             add(nick);
-            JLabel texto = new JLabel(" - Online - ");
-            add(texto);
-            nicks = new JComboBox();
 
+            JLabel texto = new JLabel(" - Online - ");
+            texto.setBackground(java.awt.Color.cyan);
+            add(texto);
+
+            nicks = new JComboBox();
             add(nicks);
+            nicks.setBackground(java.awt.Color.cyan);
+
             campochat = new JTextArea(12, 20);
             add(campochat);
+            campochat.setBackground(java.awt.Color.cyan);
+
             campo1 = new JTextField(20);
             add(campo1);
+            campo1.setBackground(java.awt.Color.cyan);
+
             sendButton = new JButton("Send");
             EnviaTexto mievento = new EnviaTexto();
             sendButton.addActionListener(mievento);
             add(sendButton);
+            sendButton.setBackground(java.awt.Color.CYAN);
 
             // That the client is permanently listening (9090) and can send and receive information (server socket)
             Thread mihilo = new Thread(this);
@@ -107,9 +121,7 @@ public class Client {
 
                     if (!paqueteRecibido.getMensaje().equals(ONLINE)) {
                         campochat.append("\n" + paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje());
-                    }
-
-                    else {
+                    } else {
                         ArrayList<String> nicksMenu = paqueteRecibido.getNicks();
                         nicks.removeAllItems();
 
@@ -128,7 +140,7 @@ public class Client {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                System.out.println("\n" + nick.getText() + ": " +campo1.getText());
+                System.out.println("\n" + nick.getText() + ": " + campo1.getText());
 
                 campochat.append("\n" + campo1.getText());
                 try {
@@ -147,5 +159,25 @@ public class Client {
             }
         }
     }
+
+    public static class Color extends JFrame {
+        static class ColorFondo implements ActionListener {
+
+            private java.awt.Color colordeFondo;
+            private JPanel lamina;
+
+            public ColorFondo(java.awt.Color c, JPanel l) {
+                colordeFondo = c;
+                lamina = l;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                lamina.setBackground(colordeFondo);
+            }
+        }
+
+        }
 }
 
