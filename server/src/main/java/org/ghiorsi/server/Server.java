@@ -47,6 +47,7 @@ public class Server {
             areatexto = new JTextArea();
             milamina.add(areatexto, BorderLayout.CENTER);
             add(milamina);
+            areatexto.setBackground(Color.cyan);
             setVisible(true);
 
             // In order to the Server through the socket listens to the Client at all times, we will use a Tread
