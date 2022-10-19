@@ -13,16 +13,17 @@ public class Sender {
     public Sender(Socket senderSocket) {
       this.senderSocket = senderSocket;
     }
-    public void sendMessage(String nick, String message) throws IOException {
+    public void sendMessage(String nickTo, String nickFrom, String message) throws IOException {
         ShippingPackage datos = new ShippingPackage();
-        datos.setNick(nick);
+        datos.setNickTo(nickTo);
+        datos.setNickFrom(nickFrom);
         datos.setMensaje(message);
         ObjectOutputStream outputStream = new ObjectOutputStream(senderSocket.getOutputStream());
         outputStream.writeObject(datos);
     }
     public void notifyMyNick(String myNick) throws IOException {
         ShippingPackage datos = new ShippingPackage();
-        datos.setNick(myNick);
+        datos.setNickTo(myNick);
         datos.setMensaje(Client.ONLINE);
         ObjectOutputStream outputStream = new ObjectOutputStream(senderSocket.getOutputStream());
         outputStream.writeObject(datos);

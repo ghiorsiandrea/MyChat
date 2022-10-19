@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.List;
 
 class LaminaMarcoCliente extends JPanel {
-    private final JTextField campo1;
+    private final JTextField campoDeMensaje;
     private final JComboBox<String> nicks;
-    private final JLabel nick;
+    private final JLabel myNick;
     private final JTextArea campochat;
     private final JButton sendButton;
 
@@ -19,10 +19,10 @@ class LaminaMarcoCliente extends JPanel {
 
         this.mySender = mySender;
 
-        nick = new JLabel();
-        nick.setText(userNick);
-        nick.setBackground(java.awt.Color.CYAN);
-        add(nick);
+        myNick = new JLabel();
+        myNick.setText(userNick);
+        myNick.setBackground(java.awt.Color.CYAN);
+        add(myNick);
 
         JLabel texto = new JLabel(" - Online - ");
         texto.setBackground(java.awt.Color.cyan);
@@ -36,9 +36,9 @@ class LaminaMarcoCliente extends JPanel {
         add(campochat);
         campochat.setBackground(java.awt.Color.cyan);
 
-        campo1 = new JTextField(20);
-        add(campo1);
-        campo1.setBackground(java.awt.Color.cyan);
+        campoDeMensaje = new JTextField(20);
+        add(campoDeMensaje);
+        campoDeMensaje.setBackground(java.awt.Color.cyan);
 
         sendButton = new JButton("Send");
         TextSender mievento = new TextSender();
@@ -62,14 +62,14 @@ class LaminaMarcoCliente extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            String nickReceiverText = (String) nicks.getSelectedItem();
+            String nickSenderText = myNick.getText();
+            String message = campoDeMensaje.getText();
 
-            String nickText = nick.getText();
-            String campo1Text = campo1.getText();
-
-            System.out.println("\n" + nickText + ": " + campo1Text);
-            campochat.append("\n" + campo1Text);
+            System.out.println("\n" + nickSenderText + ": " + message);
+            campochat.append("\n" + message);
             try {
-                mySender.sendMessage(nickText, campo1Text);
+                mySender.sendMessage(nickReceiverText, nickSenderText, message);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

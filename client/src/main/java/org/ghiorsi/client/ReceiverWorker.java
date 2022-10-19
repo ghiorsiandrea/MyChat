@@ -26,7 +26,7 @@ public class ReceiverWorker extends Thread {
                     ShippingPackage paqueteRecibido = (ShippingPackage) flujoentrada.readObject();
 
                     if (!paqueteRecibido.getMensaje().equals(Client.ONLINE)) {
-                        laminaMarcoCliente.writeMessage(paqueteRecibido.getNick(), paqueteRecibido.getMensaje());
+                        laminaMarcoCliente.writeMessage(paqueteRecibido.getNickFrom(), paqueteRecibido.getMensaje());
                     } else {
                         laminaMarcoCliente.updateNicks(paqueteRecibido.getNicks());
                     }

@@ -8,12 +8,14 @@ public class Client {
     public static final int PORT = Integer.parseInt(System.getenv("PORT"));
     public static final String ONLINE = " Online";
 
+    public static String userNick;
+
     public static void main(String[] args) {
 
         Socket mySocket = null;
         Sender mySender = null;
         //TODO: SET COLOR ON JOPTIONPANE
-        String userNick = JOptionPane.showInputDialog("Write your Nick: ");
+        userNick = JOptionPane.showInputDialog("Write your Nick: ");
         try {
            mySocket = new Socket("192.168.1.14", PORT);
             mySender = new Sender(mySocket);
