@@ -22,7 +22,6 @@ public class Server {
         this.ALL_NICKS_AND_IPS = allNicksAndIps;
     }
 
-
     public static void main(String[] args) {
         MarcoServidor miMarco = new MarcoServidor(new NewConnectionManager(), new MessageManager());
         miMarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,6 +40,7 @@ public class Server {
 
         public MarcoServidor(NewConnectionManager newConnectionManager, MessageManager messageManager) {
             this.newConnectionManager = newConnectionManager;
+            this.messageManager = messageManager;
 
             setBounds(1200, 300, 280, 350);
             JPanel milamina = new JPanel();

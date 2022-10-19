@@ -25,35 +25,35 @@ public class NewConnectionManager {
 
     public void processConnection(Socket newSocket) {
         pool.submit(() -> {
-            String nick;
-            ShippingPackage paquete_recibido;
-            try {
-                ObjectInputStream paquete_datos = new ObjectInputStream(newSocket.getInputStream());
-                paquete_recibido = (ShippingPackage) paquete_datos.readObject();
-                nick = paquete_recibido.getNick();
-                Server.MarcoServidor.NICKS_AND_SOCKETS.put(nick, newSocket);
-                Collection<Socket> socketCollection = Server.MarcoServidor.NICKS_AND_SOCKETS.values();
-                Set<String> nicksSet = Server.MarcoServidor.NICKS_AND_SOCKETS.keySet();
-                ShippingPackage nicksPackage = new ShippingPackage();
-                nicksPackage.setNicks(new ArrayList<>(nicksSet));
-                nicksPackage.setMensaje(ONLINE);
+            synchronized (newSocket) {
+                String nick;
+                ShippingPackage paquete_recibido;
+                try {
+                    ObjectInputStream paquete_datos = new ObjectInputStream(newSocket.getInputStream());
+                    paquete_recibido = (ShippingPackage) paquete_datos.readObject();
+                    nick = paquete_recibido.getNickTo();
+                    Server.MarcoServidor.NICKS_AND_SOCKETS.put(nick, newSocket);
+                    Collection<Socket> socketCollection = Server.MarcoServidor.NICKS_AND_SOCKETS.values();
+                    Set<String> nicksSet = Server.MarcoServidor.NICKS_AND_SOCKETS.keySet();
+                    ShippingPackage nicksPackage = new ShippingPackage();
+                    nicksPackage.setNicks(new ArrayList<>(nicksSet));
+                    nicksPackage.setMensaje(ONLINE);
 
-                for (Socket socketsColl : socketCollection) {
+                    for (Socket socketsColl : socketCollection) {
 
-                    // Communication bridge through which the data will flow to be forwarded
-                    ObjectOutputStream paqueteReenvio = new ObjectOutputStream(socketsColl.getOutputStream());
-                    paqueteReenvio.writeObject(nicksPackage);
+                        // Communication bridge through which the data will flow to be forwarded
+                        ObjectOutputStream paqueteReenvio = new ObjectOutputStream(socketsColl.getOutputStream());
+                        paqueteReenvio.writeObject(nicksPackage);
+                    }
+                    for (Socket z : socketCollection) {
+                        System.out.println("SOCKETS ONLINE: " + z);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-                for (Socket z : socketCollection) {
-                    System.out.println("NICKS: " + z);
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
         });
     }
-
-
 
 
 }
