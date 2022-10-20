@@ -12,16 +12,6 @@ import java.util.Map;
 
 public class Server {
 
-    public static HashMap<String, String> ALL_NICKS_AND_IPS = new HashMap<String, String>();
-
-    public HashMap<String, String> getAllIps() {
-        return ALL_NICKS_AND_IPS;
-    }
-
-    public void setAllIps(HashMap<String, String> allNicksAndIps) {
-        this.ALL_NICKS_AND_IPS = allNicksAndIps;
-    }
-
     public static void main(String[] args) {
         MarcoServidor miMarco = new MarcoServidor(new NewConnectionManager(), new MessageManager());
         miMarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,11 +51,11 @@ public class Server {
             System.out.println("Welcome to My Chat");
             try (ServerSocket servidor = new ServerSocket()) {
                 servidor.bind(new InetSocketAddress("0.0.0.0", PORT));
-
+                IncomingMessageChecker incomingMessageChecker = new IncomingMessageChecker();
+                incomingMessageChecker.start();
                 while (true) {
                     Socket misocket = servidor.accept();
                     newConnectionManager.processConnection(misocket);
-                    messageManager.processMessage(misocket);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -14,7 +14,7 @@ public class IncomingMessageChecker extends Thread {
     }
 
     @Override
-    public void start() {
+    public void run() {
         while (true) {
             List<Socket> socketList = new ArrayList<>(Server.MarcoServidor.NICKS_AND_SOCKETS.values());
             for (Socket socket : socketList) {
@@ -22,6 +22,7 @@ public class IncomingMessageChecker extends Thread {
                     int available = socket.getInputStream().available();
                     boolean isDataForRead = available != 0;
                     if (isDataForRead) {
+                        messageManager.processMessage(socket);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
