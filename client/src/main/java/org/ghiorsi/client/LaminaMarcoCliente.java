@@ -67,7 +67,7 @@ class LaminaMarcoCliente extends JPanel {
             String message = campoDeMensaje.getText();
 
             System.out.println("\n" + nickSenderText + ": " + message);
-            campochat.append("\n" + message);
+            campochat.append("\n" + nickSenderText + ": " + message);
             try {
                 mySender.sendMessage(nickReceiverText, nickSenderText, message);
             } catch (IOException ex) {
