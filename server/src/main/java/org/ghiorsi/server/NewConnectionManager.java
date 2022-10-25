@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import static org.ghiorsi.server.Server.ONLINE;
 
@@ -19,7 +20,16 @@ public class NewConnectionManager {
     private ExecutorService pool;
 
     public NewConnectionManager() {
-        pool = Executors.newFixedThreadPool(6);
+        pool = Executors.newFixedThreadPool(6, new ThreadFactory() {
+            private int count = 1;
+
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                thread.setName("connection-manager-" + count++);
+                return thread;
+            }
+        });
 
     }
 
@@ -32,9 +42,13 @@ public class NewConnectionManager {
                     ObjectInputStream paquete_datos = new ObjectInputStream(newSocket.getInputStream());
                     paquete_recibido = (ShippingPackage) paquete_datos.readObject();
                     nick = paquete_recibido.getNickTo();
-                    Server.MarcoServidor.NICKS_AND_SOCKETS.put(nick, newSocket);
-                    Collection<Socket> socketCollection = Server.MarcoServidor.NICKS_AND_SOCKETS.values();
-                    Set<String> nicksSet = Server.MarcoServidor.NICKS_AND_SOCKETS.keySet();
+                    Server.MarcoServidor.NICKS_AND_CLIENT_DATA.put(nick, new ClientData(newSocket, nick));
+                    Collection<Socket> socketCollection = Server.MarcoServidor.NICKS_AND_CLIENT_DATA
+                            .values()
+                            .stream()
+                            .map(ClientData::getSocket)
+                            .toList();
+                    Set<String> nicksSet = Server.MarcoServidor.NICKS_AND_CLIENT_DATA.keySet();
                     ShippingPackage nicksPackage = new ShippingPackage();
                     nicksPackage.setNicks(new ArrayList<>(nicksSet));
                     nicksPackage.setMensaje(ONLINE);

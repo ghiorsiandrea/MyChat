@@ -21,7 +21,7 @@ public class Server {
     public static final String ONLINE = " Online";
 
     public static class MarcoServidor extends JFrame implements Runnable {
-        static Map<String, Socket> NICKS_AND_SOCKETS = Collections.synchronizedMap(new HashMap<>());
+        static Map<String, ClientData> NICKS_AND_CLIENT_DATA = Collections.synchronizedMap(new HashMap<>());
         static JTextArea areatexto;
 
         private NewConnectionManager newConnectionManager;
@@ -42,7 +42,7 @@ public class Server {
             setVisible(true);
 
             // In order to the Server through the socket listens to the Client at all times, we will use a Tread
-            Thread mihilo = new Thread(this);
+            Thread mihilo = new Thread(this, "server");
             mihilo.start();
         }
 
@@ -51,8 +51,8 @@ public class Server {
             System.out.println("Welcome to My Chat");
             try (ServerSocket servidor = new ServerSocket()) {
                 servidor.bind(new InetSocketAddress("0.0.0.0", PORT));
-                IncomingMessageChecker incomingMessageChecker = new IncomingMessageChecker();
-                incomingMessageChecker.start();
+                ClientEventChecker clientEventChecker = new ClientEventChecker();
+                clientEventChecker.start();
                 while (true) {
                     Socket misocket = servidor.accept();
                     newConnectionManager.processConnection(misocket);
