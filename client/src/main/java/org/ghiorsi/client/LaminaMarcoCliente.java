@@ -45,6 +45,7 @@ class LaminaMarcoCliente extends JPanel {
         sendButton.addActionListener(mievento);
         add(sendButton);
         sendButton.setBackground(java.awt.Color.CYAN);
+
     }
 
     public void updateNicks(List<String> allNicks) {

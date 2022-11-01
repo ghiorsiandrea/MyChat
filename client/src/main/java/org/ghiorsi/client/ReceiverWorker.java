@@ -4,15 +4,25 @@ import org.ghiorsi.commons.ShippingPackage;
 
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ReceiverWorker extends Thread {
 
+    private final Map<String, Consumer<ShippingPackage>> receiverConsumerMap;
     private Socket receiverSocket;
     private LaminaMarcoCliente laminaMarcoCliente;
 
     public ReceiverWorker(Socket receiverSocket, LaminaMarcoCliente laminaMarcoCliente) {
         this.receiverSocket = receiverSocket;
         this.laminaMarcoCliente = laminaMarcoCliente;
+        this.receiverConsumerMap = Map.of(
+                Client.ONLINE,
+                shippingPackage -> laminaMarcoCliente.updateNicks(shippingPackage.getNicks()),
+                Client.ECHO_TEST,
+                shippingPackage -> System.out.println("Echo Test recibido")
+        );
     }
 
     @Override
@@ -24,20 +34,10 @@ public class ReceiverWorker extends Thread {
                 if (available != 0) {
                     ObjectInputStream flujoentrada = new ObjectInputStream(receiverSocket.getInputStream());
                     ShippingPackage paqueteRecibido = (ShippingPackage) flujoentrada.readObject();
-
-                    if (!paqueteRecibido.getMensaje().equals(Client.ONLINE)) {
-                        laminaMarcoCliente.writeMessage(paqueteRecibido.getNickFrom(), paqueteRecibido.getMensaje());
-                    } else {
-                        laminaMarcoCliente.updateNicks(paqueteRecibido.getNicks());
-                    }
-                } else {
-                    synchronized (this) {
-                        try {
-                            this.wait(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    Optional.ofNullable(receiverConsumerMap.get(paqueteRecibido.getMensaje()))
+                            .ifPresentOrElse(consumer -> consumer.accept(paqueteRecibido),
+                                    () -> laminaMarcoCliente.writeMessage(paqueteRecibido.getNickFrom(), paqueteRecibido.getMensaje()));
+                    this.wait(1000);
                 }
             }
         } catch (Exception e) {
