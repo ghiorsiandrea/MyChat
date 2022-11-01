@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 
+import static org.ghiorsi.server.Server.ECHO_TEST;
 import static org.ghiorsi.server.Server.ONLINE;
 
 public class MessageManager {
@@ -46,7 +47,7 @@ public class MessageManager {
                     mensaje = paquete_recibido.getMensaje();
                     //String localizacionIp = newSocket.getInetAddress().getHostAddress();
                     Socket otherSocket = Server.MarcoServidor.NICKS_AND_CLIENT_DATA.get(nickTo).getSocket();
-                    if (!mensaje.equals(ONLINE)) {
+                    if (!mensaje.equals(ONLINE) && !mensaje.equals(ECHO_TEST)) {
                         Server.MarcoServidor.areatexto.append("\n" + "FROM: " + nickFrom + ", TO: " + nickTo + " " +
                                 "\n" + "" + mensaje + "");
                         // Communication bridge through which the data will flow to be forwarded

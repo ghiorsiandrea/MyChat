@@ -20,6 +20,8 @@ public class Server {
     public static final int PORT = Integer.parseInt(System.getenv("PORT"));
     public static final String ONLINE = " Online";
 
+    public static final String ECHO_TEST = "ECHO TEST";
+
     public static class MarcoServidor extends JFrame implements Runnable {
         static Map<String, ClientData> NICKS_AND_CLIENT_DATA = Collections.synchronizedMap(new HashMap<>());
         static JTextArea areatexto;
@@ -53,6 +55,8 @@ public class Server {
                 servidor.bind(new InetSocketAddress("0.0.0.0", PORT));
                 ClientEventChecker clientEventChecker = new ClientEventChecker();
                 clientEventChecker.start();
+                ConnectionChecker connectionChecker = new ConnectionChecker();
+                connectionChecker.start();
                 while (true) {
                     Socket misocket = servidor.accept();
                     newConnectionManager.processConnection(misocket);
