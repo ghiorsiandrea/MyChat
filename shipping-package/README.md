@@ -20,7 +20,11 @@ with Sockets.`
 
 <br>
 
-chat-common was created following "Pildoras Informaticas" 's YouTube Java course.
+Shipping package was based on reading the YouTube Java course "Computer Pills",
+however, you will appreciate that I have made several modifications
+in order to make it more efficient (for example, in the reuse of
+sockets), as well as I have applied various knowledge acquired for
+the purpose of improving the user experience.
 <br>
 <div align="middle">
 <img src="src/main/resources/javacourse.png" height="100" width="120"/>
